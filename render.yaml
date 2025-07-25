@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: voice-cloning-app
+    env: python
+    plan: starter
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.18
+      - key: PORT
+        value: 8000
+      - key: TTS_CACHE_PATH
+        value: /opt/render/project/src/.cache
+    disk:
+      name: voice-data
+      mountPath: /opt/render/project/src/voice_embeddings
+      sizeGB: 10
+    healthCheckPath: /health
