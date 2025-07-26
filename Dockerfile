@@ -1,4 +1,3 @@
-# ---------- Stage 2: Final container ----------
 FROM python:3.9-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -6,17 +5,24 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     TTS_CACHE_PATH=/app/.cache \
     PORT=8000
 
-# ✅ FIX: Install runtime system dependencies here too
+# System dependencies
 RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    git \
     curl \
     libexpat1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Create user and working directory
 RUN adduser --disabled-password --gecos '' appuser
 WORKDIR /app
 
-COPY --from=base /usr/local /usr/local
-COPY --from=base /app /app
+# Copy files
+COPY requirements.txt .
+RUN pip install --upgrade pip
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
 
 RUN mkdir -p /app/logs /app/voice_embeddings && chown -R appuser:appuser /app
 USER appuser
