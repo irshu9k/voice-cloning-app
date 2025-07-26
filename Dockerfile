@@ -20,8 +20,6 @@ RUN pip install --no-cache-dir -r requirements.txt --verbose
 
 COPY . .
 
-RUN python -c "from app import preload_models; preload_models()"
-
 # ---------- Stage 2: Final container ----------
 FROM python:3.9-slim
 
