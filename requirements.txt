@@ -3,7 +3,7 @@ uvicorn[standard]==0.24.0
 python-multipart==0.0.6
 TTS==0.10.0
 torch==2.0.0
-torchaudio==2.0.1
+torchaudio==2.0.0
 librosa
 soundfile==0.12.1
 scipy==1.10.1
