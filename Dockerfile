@@ -5,7 +5,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     TTS_CACHE_PATH=/app/.cache \
     PORT=8000
 
-# System dependencies
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     git \
@@ -13,11 +12,9 @@ RUN apt-get update && apt-get install -y \
     libexpat1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Create user and working directory
 RUN adduser --disabled-password --gecos '' appuser
 WORKDIR /app
 
-# Copy files
 COPY requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
@@ -32,4 +29,4 @@ EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
   CMD curl -f http://localhost:8000/health || exit 1
 
-CMD ["python", "app.py"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
