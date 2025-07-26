@@ -7,11 +7,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     git \
     curl \
+    libexpat1 \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
@@ -19,9 +20,6 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
-
-# Optional preload (commented out unless preload_models exists in app.py)
-# RUN python -c "from app import preload_models; preload_models()"
 
 # ---------- Stage 2: Final container ----------
 FROM python:3.9-slim
