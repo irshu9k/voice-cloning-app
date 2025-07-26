@@ -1,26 +1,3 @@
-# ---------- Stage 1: Base environment ----------
-FROM python:3.8-slim AS base
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    TTS_CACHE_PATH=/app/.cache
-
-WORKDIR /app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    ffmpeg \
-    git \
-    curl \
-    libexpat1 \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-COPY requirements.txt .
-RUN pip install --upgrade pip
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY . .
-
 # ---------- Stage 2: Final container ----------
 FROM python:3.9-slim
 
@@ -28,6 +5,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     TTS_CACHE_PATH=/app/.cache \
     PORT=8000
+
+# ✅ FIX: Install runtime system dependencies here too
+RUN apt-get update && apt-get install -y \
+    curl \
+    libexpat1 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN adduser --disabled-password --gecos '' appuser
 WORKDIR /app
