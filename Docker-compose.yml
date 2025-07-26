@@ -8,6 +8,7 @@ services:
     volumes:
       - ./voice_embeddings:/app/voice_embeddings
       - ./logs:/app/logs
+      - ./cache:/app/.cache  # <-- new
     environment:
       - PORT=8000
       - DEVICE=auto
